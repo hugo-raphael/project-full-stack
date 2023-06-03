@@ -1,3 +1,4 @@
+import { plainToInstance } from 'class-transformer';
 import { CreateUserDto } from '../../dto/create-user.dto';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../entities/user.entity';
@@ -13,16 +14,21 @@ export class UsersInMemoryRepository implements UsersRepository {
 
     this.database.push(newUser);
 
-    return newUser;
+    return plainToInstance(User, newUser);
   }
 
   findAll(): User[] | Promise<User[]> {
-    return this.database;
+    return plainToInstance(User, this.database);
   }
 
   findOne(id: string): User | Promise<User> {
     const user = this.database.find((user) => user.id === id);
-    return user;
+    return plainToInstance(User, user);
+  }
+
+  findByEmail(email: string): User | Promise<User> {
+    const user = this.database.find((user) => user.email === email);
+    return plainToInstance(User, user);
   }
 
   update(id: string, data: UpdateUserDto): User | Promise<User> {
@@ -32,7 +38,7 @@ export class UsersInMemoryRepository implements UsersRepository {
       ...data,
     };
 
-    return this.database[userIndex];
+    return plainToInstance(User, this.database[userIndex]);
   }
 
   delete(id: string): void | Promise<void> {
