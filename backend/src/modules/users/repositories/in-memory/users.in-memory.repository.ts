@@ -3,7 +3,9 @@ import { CreateUserDto } from '../../dto/create-user.dto';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../entities/user.entity';
 import { UsersRepository } from '../users.repository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UsersInMemoryRepository implements UsersRepository {
   private database: User[] = [];
   create(data: CreateUserDto): User | Promise<User> {
