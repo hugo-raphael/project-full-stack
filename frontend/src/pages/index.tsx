@@ -1,11 +1,9 @@
 import router, { useRouter } from 'next/router';
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function Home() {
+  const router = useRouter()
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="w-full max-w-xs">
