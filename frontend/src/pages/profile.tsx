@@ -85,8 +85,8 @@ const Profile = () => {
           },
         });
         localStorage.removeItem("token")
-        setIsModalOpen(false);
         router.push("/");
+        setIsModalOpen(false);
       }
     } catch (error) {
       console.error(error);
