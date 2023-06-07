@@ -7,6 +7,7 @@ import { GetServerSideProps } from "next";
 import React, { useEffect, useState } from "react";
 import { FaUser, FaSignOutAlt, FaPlus } from "react-icons/fa";
 import jwt from "jsonwebtoken";
+import { useRouter } from "next/router";
 
 interface inputContact {
   fullName: string;
@@ -15,6 +16,7 @@ interface inputContact {
 }
 
 const Dashboard = () => {
+  const router = useRouter();
   const [contacts, setContacts] = useState<contactData[]>([]);
 
   const handleDeleteContact = (id: string) => {
@@ -61,11 +63,27 @@ const Dashboard = () => {
       <header className="flex items-center justify-between py-4 px-6 bg-gray-800 text-white">
         <h2 className="text-2xl">Dashboard - Contacts</h2>
         <div className="flex items-center">
-          <button className="flex items-center text-white text-sm focus:outline-none mr-4">
+          <button
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (token) {
+                const decodedToken = jwt.decode(token);
+                const userId = decodedToken?.sub;
+                router.push(`/profile/?=${userId}`);
+              }
+            }}
+            className="flex items-center text-white text-sm focus:outline-none mr-4"
+          >
             <FaUser className="mr-2" />
             Perfil
           </button>
-          <button className="flex items-center text-white text-sm focus:outline-none">
+          <button
+            className="flex items-center text-white text-sm focus:outline-none"
+            onClick={() => {
+              localStorage.removeItem("token");
+              router.push("/");
+            }}
+          >
             <FaSignOutAlt className="mr-2" />
             Logout
           </button>
