@@ -11,7 +11,7 @@ interface Contact {
 
 interface User {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   contacts: Contact[];
 }
@@ -43,7 +43,7 @@ const Profile = () => {
 
   return (
     <div>
-      <h1>Perfil de {user.name}</h1>
+      <h1>Perfil de {user.fullName}</h1>
       <p>E-mail: {user.email}</p>
 
       <h2>Contatos</h2>

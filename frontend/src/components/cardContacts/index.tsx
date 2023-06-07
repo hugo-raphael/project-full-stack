@@ -1,5 +1,6 @@
-import { contactData } from "@/schemas/cards.schemas";
+import { contactData } from "@/schemas/contacts.schemas";
 import { useState } from "react";
+import { api } from "@/services/api";
 
 interface Contact {
   clientId: string;
@@ -7,6 +8,7 @@ interface Contact {
   fullName: string;
   email: string;
   phone: string;
+  registrationDate: Date;
 }
 
 interface ContactCardProps {
@@ -27,7 +29,8 @@ export const ContactCard: React.FC<ContactCardProps> = ({
     fullName: contact.fullName,
     email: contact.email,
     phone: contact.phone,
-    clientId: contact.clientId
+    clientId: contact.clientId,
+    registrationDate: contact.registrationDate,
   });
 
   const handleDeleteClick = () => {
@@ -38,16 +41,38 @@ export const ContactCard: React.FC<ContactCardProps> = ({
     setIsEditModalOpen(true);
   };
 
-  const handleEditSubmit = () => {
-    // Perform edit action
-    onEdit(contact.id, editedContact);
-    setIsEditModalOpen(false);
+  const handleEditSubmit = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const response = await api.patch(`/contacts/${contact.id}`, editedContact, config);
+      onEdit(contact.id, response.data);
+      setIsEditModalOpen(false);
+      console.log("update deu certo");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDeleteConfirm = () => {
-    // Perform delete action
-    onDelete(contact.id);
-    setIsDeleteModalOpen(false);
+  const handleDeleteConfirm = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      await api.delete(`/contacts/${contact.id}`, config);
+      onDelete(contact.id);
+      setIsDeleteModalOpen(false);
+      console.log("delete deu certo");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +85,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
 
   return (
     <li className="bg-white rounded-lg p-4 shadow-md mb-4">
-      <h3 className="text-xl mb-2">{contact.fullName}</h3>
+      <h3 className="text-xl mb-2 text-black">{contact.fullName}</h3>
       <p className="text-gray-600 mb-2">{contact.email}</p>
       <p className="text-gray-600 mb-4">{contact.phone}</p>
       <div className="flex justify-between">
@@ -77,8 +102,6 @@ export const ContactCard: React.FC<ContactCardProps> = ({
           Excluir
         </button>
       </div>
-
-      {/* Modal de Edição */}
       {isEditModalOpen && (
         <div className="modal-overlay fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-5 z-50 flex justify-center items-center">
           <div className="modal bg-white w-90vw md:w-500px p-6">
@@ -94,7 +117,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
                   name="fullName"
                   value={editedContact.fullName}
                   onChange={handleEditInputChange}
-                  className="border border-black rounded p-2"
+                  className="border border-black rounded p-2 text-black"
                 />
               </div>
               <div className="mb-4 flex flex-col">
@@ -107,7 +130,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
                   name="email"
                   value={editedContact.email}
                   onChange={handleEditInputChange}
-                  className="border border-black rounded p-2"
+                  className="border border-black rounded p-2 text-black"
                 />
               </div>
               <div className="mb-4 flex flex-col">
@@ -120,7 +143,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
                   name="phone"
                   value={editedContact.phone}
                   onChange={handleEditInputChange}
-                  className="border border-black rounded p-2"
+                  className="border border-black rounded p-2 text-black"
                 />
               </div>
               <button
@@ -141,12 +164,13 @@ export const ContactCard: React.FC<ContactCardProps> = ({
         </div>
       )}
 
-      {/* Modal de Exclusão */}
       {isDeleteModalOpen && (
         <div className="modal-overlay fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-5 z-50 flex justify-center items-center">
           <div className="modal bg-white w-90vw md:w-500px p-6">
             <h2 className="text-xl mb-4">Excluir Contato</h2>
-            <p className="text-black">Deseja realmente excluir o contato {contact.fullName}?</p>
+            <p className="text-black">
+              Deseja realmente excluir o contato {contact.fullName}?
+            </p>
             <div className="flex justify-end mt-6">
               <button
                 className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg mr-2"

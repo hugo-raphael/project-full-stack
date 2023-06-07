@@ -1,5 +1,6 @@
-import { contactData } from "@/schemas/cards.schemas";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { api } from "@/services/api";
+import jwt from "jsonwebtoken";
 
 interface FormContactData {
   fullName: string;
@@ -21,23 +22,46 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
     fullName: "",
     email: "",
     phone: "",
-    clientId: "1akcnCSJIANc31cnciISJHNciasc",
+    clientId: "",
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onClose();
-    console.log(formData)
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      clientId: "1akcnCSJIANc31cnciISJHNciasc",
-    });
+
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const decodedToken = jwt.decode(token);
+        const clientId = decodedToken?.sub;
+
+        const newContact: FormContactData = {
+          ...formData,
+          clientId: ''+clientId,
+        };
+
+        await api.post("/contacts", newContact, config);
+
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          clientId: "",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

@@ -7,6 +7,7 @@ export const contactsSchema = z.object({
   email: z.string(),
   phone: z.string(),
   clientId: z.string(),
+  registrationDate: z.date()
 })
 
 
