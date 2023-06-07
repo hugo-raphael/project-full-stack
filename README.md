@@ -1,8 +1,8 @@
 # project-full-stack
 
-# Nome da sua Aplicação
+# Contacts Manager
 
-Descrição breve da sua aplicação.
+O Gerenciador de Contatos é uma aplicação que permite aos usuários adicionar, armazenar e gerenciar seus contatos de forma conveniente. Com esta aplicação, os usuários podem manter uma lista organizada de informações de contato de pessoas importantes, como amigos, familiares, colegas de trabalho e muito mais.
 
 ## Pré-requisitos
 
@@ -17,16 +17,17 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 
 1. Navegue até a pasta do backend:
 
-```json
+```bash
 cd backend
 ```
 Instale as dependências:
 
-```json
+```bash
 yarn install
 ```
 ou
-```json
+
+```bash
 npm install
 ```
 
@@ -34,18 +35,18 @@ npm install
 
 1. Navegue até a pasta do frontend:
 
-```json
+```bash
 cd frontend
 ```
 
 Instale as dependências:
 
-```json
+```bash
 yarn install
 ```
 ou
 
-```json
+```bash
 npm install
 ```
 
@@ -56,12 +57,12 @@ npm install
 
 Navegue até a pasta do backend:
 
-```json
+```bash
 cd backend
 ```
 Execute o comando para iniciar o servidor:
 
-```json
+```bash
 yarn run start
 ```
 
@@ -70,13 +71,13 @@ yarn run start
 
 Navegue até a pasta do frontend:
 
-```json
+```bash
 cd frontend
 ```
 
 Execute o comando para iniciar a aplicação:
 
-```json
+```bash
 yarn run dev
 ```
 
