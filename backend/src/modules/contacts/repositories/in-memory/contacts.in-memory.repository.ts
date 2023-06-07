@@ -8,10 +8,11 @@ import { Contact } from '../../entities/contact.entity';
 @Injectable()
 export class ContactsInMemoryRepository implements ContactsRepository {
   private database: Contact[] = [];
-  create(data: CreateContactDto): Contact | Promise<Contact> {
+  create(data: CreateContactDto, clientId: string): Contact | Promise<Contact> {
     const newContact = new Contact();
     Object.assign(newContact, {
       ...data,
+      clientId,
     });
 
     this.database.push(newContact);
@@ -39,6 +40,13 @@ export class ContactsInMemoryRepository implements ContactsRepository {
   findByEmail(email: string): Contact | Promise<Contact> {
     const contact = this.database.find((contact) => contact.email === email);
     return plainToInstance(Contact, contact);
+  }
+
+  getContactsByClientId(clientId: string): Contact[] | Promise<Contact[]> {
+    const contacts = this.database.filter(
+      (contact) => contact.clientId === clientId,
+    );
+    return plainToInstance(Contact, contacts);
   }
 
   update(id: string, data: UpdateContactDto): Contact | Promise<Contact> {

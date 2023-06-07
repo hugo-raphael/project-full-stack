@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users.repository';
 import { CreateUserDto } from '../../dto/create-user.dto';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../entities/user.entity';
-import { PrismaService } from 'src/database/prisma.service';
 import { plainToInstance } from 'class-transformer';
+import { PrismaService } from 'src/database/prisma.service';
+import { Injectable } from '@nestjs/common';
 
-Injectable();
+@Injectable()
 export class UserPrismaRepository implements UsersRepository {
   constructor(private prisma: PrismaService) {}
   async create(data: CreateUserDto): Promise<User> {
@@ -41,7 +41,7 @@ export class UserPrismaRepository implements UsersRepository {
       where: { email },
     });
 
-    return plainToInstance(User, user);
+    return user;
   }
 
   async update(id: string, data: UpdateUserDto): Promise<User> {

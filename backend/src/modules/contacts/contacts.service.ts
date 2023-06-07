@@ -12,7 +12,7 @@ import { ContactsRepository } from './repositories/contacts.repository';
 export class ContactsService {
   constructor(private contactsRepository: ContactsRepository) {}
 
-  async create(createContactDto: CreateContactDto) {
+  async create(createContactDto: CreateContactDto, clientId: string) {
     const verifyEmail = await this.contactsRepository.findByEmail(
       createContactDto.email,
     );
@@ -21,13 +21,16 @@ export class ContactsService {
       throw new ConflictException('Email already exists');
     }
 
-    const contact = await this.contactsRepository.create(createContactDto);
+    const contact = await this.contactsRepository.create(
+      createContactDto,
+      clientId,
+    );
 
     return contact;
   }
 
-  async findAll(clientId: string) {
-    const contacts = await this.contactsRepository.findAll(clientId);
+  async findAll() {
+    const contacts = await this.contactsRepository.findAll();
 
     return contacts;
   }
@@ -37,21 +40,13 @@ export class ContactsService {
     return contact;
   }
 
-  async findOneByClientId(clientId: string, contactId: string) {
-    const contact = await this.contactsRepository.findOneByClientId(
-      clientId,
-      contactId,
-    );
-
-    if (!contact) {
-      throw new NotFoundException('Contact does not exist');
-    }
-    return contact;
-  }
-
   async findByEmail(email: string) {
     const contact = await this.contactsRepository.findOne(email);
     return contact;
+  }
+
+  async getContactsByClientId(clientId: string) {
+    return this.contactsRepository.getContactsByClientId(clientId);
   }
 
   async update(id: string, updateContactDto: UpdateContactDto) {

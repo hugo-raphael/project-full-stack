@@ -1,20 +1,20 @@
+import { Injectable } from '@nestjs/common';
 import { CreateContactDto } from '../../dto/create-contact.dto';
 import { UpdateContactDto } from '../../dto/update-contact.dto';
 import { Contact } from '../../entities/contact.entity';
 import { ContactsRepository } from '../contacts.repository';
 import { PrismaService } from 'src/database/prisma.service';
 
+@Injectable()
 export class ContactPrismaRepository implements ContactsRepository {
   constructor(private prisma: PrismaService) {}
 
-  findByClientId(clientId: string): Contact | Promise<Contact> {
-    throw new Error('Method not implemented.');
-  }
-  async create(data: CreateContactDto): Promise<Contact> {
+  async create(data: CreateContactDto, clientId: string): Promise<Contact> {
     const contact = new Contact();
 
     Object.assign(contact, {
       ...data,
+      clientId,
     });
 
     const newContact = await this.prisma.contact.create({
@@ -26,19 +26,6 @@ export class ContactPrismaRepository implements ContactsRepository {
 
   async findAll(): Promise<Contact[]> {
     const contact = await this.prisma.contact.findMany();
-
-    return contact;
-  }
-
-  async findOneByClientId(clientId: string, contactId: string) {
-    const contact = await this.prisma.contact.findFirst({
-      where: {
-        id: contactId,
-        client: {
-          id: clientId,
-        },
-      },
-    });
 
     return contact;
   }
@@ -59,13 +46,13 @@ export class ContactPrismaRepository implements ContactsRepository {
     return contact;
   }
 
-  // async findByClientId(clientId: string): Promise<Contact> {
-  //   const contact = await this.prisma.contact.findUnique({
-  //     where: { clientId },
-  //   });
+  async getContactsByClientId(clientId: string): Promise<Contact[]> {
+    const contacts = await this.prisma.contact.findMany({
+      where: { clientId },
+    });
 
-  //   return contact;
-  // }
+    return contacts;
+  }
 
   async update(id: string, data: UpdateContactDto): Promise<Contact> {
     const contact = await this.prisma.contact.update({

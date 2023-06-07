@@ -3,19 +3,16 @@ import { UpdateContactDto } from '../dto/update-contact.dto';
 import { Contact } from '../entities/contact.entity';
 
 export abstract class ContactsRepository {
-  abstract create(data: CreateContactDto): Promise<Contact> | Contact;
-  abstract findAll(clientId: string): Promise<Contact[]> | Contact[];
-  // abstract findAllFromClientId(
-  //   clientId: string,
-  // ): Promise<Contact[]> | Contact[];
-  abstract findOne(id: string): Promise<Contact> | Contact;
-
-  abstract findOneByClientId(
+  abstract create(
+    data: CreateContactDto,
     clientId: string,
-    contactId: string,
   ): Promise<Contact> | Contact;
-
+  abstract findAll(): Promise<Contact[]> | Contact[];
+  abstract findOne(id: string): Promise<Contact> | Contact;
   abstract findByEmail(email: string): Promise<Contact> | Contact;
+  abstract getContactsByClientId(
+    clientId: string,
+  ): Promise<Contact[]> | Contact[];
   abstract update(
     id: string,
     data: UpdateContactDto,

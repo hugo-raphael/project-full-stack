@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export class User {
   readonly id: string;
@@ -10,17 +10,9 @@ export class User {
   @Exclude()
   password: string;
 
-  readonly registrationDate: string;
+  readonly registrationDate: Date;
 
   constructor() {
     this.id = randomUUID();
-    this.registrationDate = new Date(Date.now()).toISOString();
   }
 }
-
-/* 
-  nome completo
-  email
-  telefone
-  data de registro (data em que o cliente foi registrado)
-*/
